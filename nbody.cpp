@@ -1,3 +1,8 @@
+//GEO1000 - Assignment 4
+//Authors: Cynthia Cai, Yue Yang
+//Student numbers: 5625483, 5516862
+
+
 /*
    Taken from:
    The Computer Language Benchmarks Game
@@ -14,7 +19,11 @@
 #define _USE_MATH_DEFINES // https://docs.microsoft.com/en-us/cpp/c-runtime-library/math-constants?view=msvc-160
 #include <cmath>
 #include <iostream>
-
+#include <fstream>
+using namespace std;
+#include <chrono>
+using namespace std;
+using namespace chrono;
 
 // these values are constant and not allowed to be changed
 const double SOLAR_MASS = 4 * M_PI * M_PI;
@@ -246,12 +255,30 @@ int main(int argc, char **argv) {
         std::cout << "(to set the number of iterations for the n-body simulation)." << std::endl;
         return EXIT_FAILURE;
     } else {
+        clock_t start = clock();
+
+        std::ofstream oFile;
+        oFile.open("test.csv", ios::out);
+        oFile << "name of the body" << ',' << "position x" << ',' << "position y" << ',' << "position z"<< std::endl;
+
         const unsigned int n = atoi(argv[1]);
         offset_momentum(state);
         std::cout << energy(state) << std::endl;
+        int statesize = sizeof(state)/sizeof(state[0]);
         for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < statesize; ++j)
+            {
+                oFile << state[j].name << ','
+                      << state[j].position.x << ',' << state[j].position.y << ',' << state[j].position.z;
+                oFile << std::endl;
+            }
+            oFile << std::endl;
+            //oFile.close();
             advance(state, 0.01);
         }
+        oFile.close();
+        clock_t end = clock();
+        cout<<"It takes"<<(double)(end - start) / CLOCKS_PER_SEC << "s" << endl;
         std::cout << energy(state) << std::endl;
         return EXIT_SUCCESS;
     }
