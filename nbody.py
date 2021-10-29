@@ -150,13 +150,13 @@ def csv_writer(list):
         f_csv.writerows(rows)
 
 def main(n, ref="sun"):
-    # start_time = datetime.datetime.now()
+    start_time = datetime.datetime.now()
     offset_momentum(BODIES[ref])
     report_energy()
     csv_writer(advance(0.01, n))
     report_energy()
-    # end_time = datetime.datetime.now()
-    # print(end_time - start_time)
+    end_time = datetime.datetime.now()
+    print(end_time - start_time)
 
 if __name__ == "__main__":
     if len(sys.argv) >= 2:
